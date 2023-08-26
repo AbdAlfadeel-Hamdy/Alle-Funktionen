@@ -42,9 +42,7 @@ export default function SignIn() {
     const password = data.get("password");
 
     if (email === "admin@admin.com" && password === "test1234") {
-      window.location.replace(
-        "https://docs.google.com/spreadsheets/d/1yG23B22nT3qqlDI_4932GRUIZfSZ7sJ_d7lNYwvwO2g/edit#gid=1650816114"
-      );
+      window.location.replace(process.env.REACT_APP_URL as string);
     }
   };
 
