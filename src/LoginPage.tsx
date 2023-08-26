@@ -1,12 +1,11 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
+import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
@@ -22,7 +21,6 @@ function Copyright(props: any) {
       {...props}
     >
       {"Copyright © "}
-      {/* <Link color="inherit" href="https://mui.com/"> */}
       Alle Funktionen
       {/* </Link>{" "} */} {new Date().getFullYear()}
       {"."}
@@ -34,6 +32,14 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  const [isLoggedIn, setIsLoggedIn] = React.useState<string | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    if (isLoggedIn === "notAllowed") {
+      setError("Please try again.");
+    }
+  }, [isLoggedIn]);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -43,7 +49,13 @@ export default function SignIn() {
 
     if (email === "admin@admin.com" && password === "test1234") {
       window.location.replace(process.env.REACT_APP_URL as string);
-    }
+      setIsLoggedIn("loggedIn");
+    } else setIsLoggedIn("notAllowed");
+  };
+
+  const clearError = () => {
+    setError(null);
+    setIsLoggedIn(null);
   };
 
   return (
@@ -79,6 +91,7 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={clearError}
             />
             <TextField
               margin="normal"
@@ -89,6 +102,7 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={clearError}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -102,20 +116,9 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            {/* <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid> */}
           </Box>
         </Box>
+        {error && <Alert severity="error">Please try again later.</Alert>}
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
